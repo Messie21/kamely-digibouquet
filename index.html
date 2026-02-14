@@ -450,6 +450,7 @@ const FLOWERS = [
 
 /* 3 big greenery backgrounds (single choice) */
 const GREENS_BG = [
+  // Put your PNG files in /assets/greens/
   { id:"bg1", img:"assets/greens/bg1.png", src:"assets/greens/bg1.png" },
   { id:"bg2", img:"assets/greens/bg2.png", src:"assets/greens/bg2.png" },
   { id:"bg3", img:"assets/greens/bg3.png", src:"assets/greens/bg3.png" },
@@ -565,16 +566,18 @@ cycleGreenBtn.addEventListener("click", () => {
 
 copyLinkBtn.addEventListener("click", async () => {
   const url = buildShareUrl();
-  try{
-    await navigator.clipboard.writeText(url);
-    statusEl.innerHTML = (location.origin==="null") ? "Copied. This link works best after you publish it online." : "Copied. Paste to share.";
-  }catch{
-    statusEl.textContent = "Could not copy automatically. Copy from the address bar after opening the card.";
+  const ok = await safeCopy(url);
+  if(ok){
+    statusEl.textContent = "Copied. Paste to share.";
+  }else{
+    statusEl.textContent = "Copy this link:";
+    prompt("Copy this link:", url);
   }
 });
 
 openShareBtn.addEventListener("click", () => {
-  window.open(buildShareUrl(), "_blank");
+  const url = buildShareUrl();
+  window.open(url, "_blank", "noopener,noreferrer");
 });
 
 makeNewBtn.addEventListener("click", () => {
@@ -818,6 +821,39 @@ function decodePayload(b64url){
 function pushStateToHash(){
   const encoded = encodePayload(minimalPayload());
   history.replaceState(null, "", `#b=${encoded}`);
+}
+
+function getShareUrl(){
+  // ensure the #b=... payload is created/updated
+  pushStateToHash();
+  return location.origin + location.pathname + location.search + location.hash;
+}
+
+async function safeCopy(text){
+  // Try modern clipboard first
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  }catch(e){}
+
+  // Fallback (Safari-friendly)
+  try{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  }catch(e){
+    return false;
+  }
 }
 
 function buildShareUrl(){
