@@ -246,7 +246,7 @@
     .finePrint{margin-top:10px;color:var(--muted);font-size:12px}
 
     /* Share view */
-    #shareView{display:none}
+    #step4{display:none}
     .shareCard{
       width:min(720px, 94vw);
       margin:20px auto 40px;
@@ -344,8 +344,7 @@
 
         <div class="btnRow" style="margin-top:16px">
           <button class="btn" id="backToArrangeBtn">Back</button>
-          <button class="btn primary" id="copyLinkBtn">Copy link</button>
-          <button class="btn" id="openShareBtn">Open card</button>
+          <button class="btn primary" id="toPreviewBtn">Next</button>
         </div>
 
         <div class="finePrint" id="status"></div>
@@ -356,7 +355,7 @@
   </div>
 
   <!-- SHARE VIEW -->
-  <div id="shareView" class="wrap">
+  <div id="step4" class="wrap">
     <div class="shareCard">
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
         <div>
@@ -406,7 +405,11 @@
 
     <div class="center">
       
-      <button class="btn primary" id="downloadImgBtn">Download image</button>
+      <div class="btnRow" style="justify-content:center;gap:10px">
+      <button class="btn" id="backToCardBtn">Back</button>
+      <button class="btn primary" id="confirmBtn">Confirm</button>
+      <button class="btn" id="downloadImgBtn" disabled>Download image</button>
+    </div>
 
       <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
     </div>
@@ -473,7 +476,7 @@ let state = defaultState();
    DOM
 ========================= */
 const builderView = document.getElementById("builderView");
-const shareView   = document.getElementById("shareView");
+const step4   = document.getElementById("step4");
 
 const step1 = document.getElementById("step1");
 const step2 = document.getElementById("step2");
@@ -498,8 +501,9 @@ const songInput = document.getElementById("songInput");
 
 const formulaBox = document.getElementById("formulaBox");
 const statusEl = document.getElementById("status");
-const copyLinkBtn = document.getElementById("copyLinkBtn");
-const openShareBtn = document.getElementById("openShareBtn");
+const toPreviewBtn = document.getElementById("toPreviewBtn");
+const backToCardBtn = document.getElementById("backToCardBtn");
+const confirmBtn = document.getElementById("confirmBtn");
 const backToArrangeBtn = document.getElementById("backToArrangeBtn");
 
 const shareStage = document.getElementById("shareStage");
@@ -564,22 +568,49 @@ cycleGreenBtn.addEventListener("click", () => {
   }, 80));
 });
 
-copyLinkBtn.addEventListener("click", async () => {
-  const url = buildShareUrl();
-  const ok = await safeCopy(url);
-  if(ok){
-    statusEl.textContent = "Copied. Paste to share.";
-  }else{
-    statusEl.textContent = "Copy this link:";
-    prompt("Copy this link:", url);
+toPreviewBtn.addEventListener("click", () => {
+  // Save card inputs
+  state.card.to = toInput.value.trim();
+  state.card.msg = msgInput.value.trim();
+  state.card.from = fromInput.value.trim();
+  state.songUrl = songInput.value.trim();
+
+  // Ensure bouquet exists
+  ensureLayout(true);
+  renderBouquet(stage, greensLayer, state.layout);
+
+  // Render preview (step 4)
+  goStep(4);
+  setShareView();
+});
+
+
+backToCardBtn.addEventListener("click", () => {
+  goStep(3);
+});
+
+confirmBtn.addEventListener("click", () => {
+  downloadImgBtn.disabled = false;
+  statusEl.textContent = "Confirmed. You can download now.";
+});
+
+downloadImgBtn.addEventListener("click", async () => {
+  try{
+    statusEl.textContent = "Preparing download…";
+    // Render latest preview before capture
+    setShareView();
+    await new Promise(r => requestAnimationFrame(r));
+    const canvas = await html2canvas(shareCardEl, { backgroundColor: null, scale: 2, useCORS: true });
+    const a = document.createElement("a");
+    a.download = "kamely-digibouquet.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+    statusEl.textContent = "Downloaded.";
+  }catch(e){
+    console.error(e);
+    statusEl.textContent = "Could not download. Try another browser (Chrome works best).";
   }
 });
-
-openShareBtn.addEventListener("click", () => {
-  const url = buildShareUrl();
-  window.open(url, "_blank", "noopener,noreferrer");
-});
-
 makeNewBtn.addEventListener("click", () => {
   // clear hash and restart
   history.replaceState(null, "", location.pathname);
@@ -897,13 +928,13 @@ function loadFromHashOrInit(){
 
 function setShareView(){
   // safety: if share DOM isn't present, don't crash
-  if(!builderView || !shareView || !typedMeta || !shareGreensLayer || !shareStage || !shareMsg || !shareFrom || !shareSong || !shareFormula){
+  if(!builderView || !step4 || !typedMeta || !shareGreensLayer || !shareStage || !shareMsg || !shareFrom || !shareSong || !shareFormula){
     console.error('Share view elements missing');
     return;
   }
 
-  builderView.style.display = "none";
-  shareView.style.display = "";
+  // builderView stays visible; step switching handled by goStep()
+  step4.style.display = "";
   document.title = "A bouquet for you";
 
   // typed meta
@@ -980,6 +1011,7 @@ function goStep(n){
   step1.style.display = (n===1) ? "" : "none";
   step2.style.display = (n===2) ? "" : "none";
   step3.style.display = (n===3) ? "" : "none";
+  step4.style.display = (n===4) ? "" : "none";
 }
 
 function renderAll(){
