@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kamely Digibouquet</title>
+  <link rel="icon" href="assets/kamely-logo.png">
+
+  <!-- Fonts: keep your brand fonts if you self-host them. Fallbacks included. -->
+  <style>
+    :root{
+      --bg:#faf2f0;
+      --ink:#762e00;
+      --muted:rgba(118,46,0,.62);
+      --line:rgba(118,46,0,.18);
+      --gold:#f2ae1c;
+      --nude:#dcbdac;
+      --olive:#6c714a;
+
+      --radius:16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    .wrap{max-width:980px;margin:0 auto;padding:14px 14px;min-height:100vh;display:flex;align-items:flex-start;justify-content:center}
+    .center{display:flex;flex-direction:column;align-items:center;text-align:center}
+    .brand{
+      margin-top:8px;
+      font-family: "Lovelo", ui-sans-serif, system-ui;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-weight:900;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    h1{
+      margin:10px 0 6px;
+      font-family: "Brusher", "Georgia", serif;
+      font-weight:700;
+      font-size:clamp(40px, 6vw, 56px);
+      line-height:1;
+    }
+
+    .sub{
+      margin:0 0 18px;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .btn{
+      appearance:none;
+      background:transparent;
+      border:1px solid var(--line);
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      color:var(--ink);
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+    .btn:hover{border-color:rgba(118,46,0,.35)}
+    .btn.primary{
+      border-color:rgba(242,174,28,.75);
+      box-shadow:0 0 0 2px rgba(242,174,28,.08) inset;
+    }
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .linkBtn{border:none;text-decoration:underline;background:transparent;padding:10px 6px}
+
+    .stepTitle{
+      margin:22px 0 14px;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    /* Flower picker */
+    .picker{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin:10px 0 8px;
+      max-width:860px;
+    }
+    .flowerBtn{
+      width:220px;height:220px;
+      border:none;
+      background:transparent;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      box-shadow:none;
+      transition:transform .12s ease, filter .12s ease;
+      position:relative;
+      padding:0;
+    }
+    .flowerBtn:hover{transform:translateY(-2px); border-color:rgba(118,46,0,.32)}
+    .flowerBtn.selected{
+      filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+    }
+    .flowerBtn .dot{
+      position:absolute; top:-10px; right:-10px;
+      width:22px; height:22px; border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--ink);
+      color:var(--bg);
+      display:grid; place-items:center;
+      font-size:12px;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      display:none;
+    }
+    .flowerBtn.selected .dot{display:grid}
+    .flowerLabelRow{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+      margin:8px 0 0;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .chip{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(220,189,172,.18);
+    }
+
+    /* Bouquet stage */
+    .stageWrap{width:min(580px, 94vw); margin:10px auto 0}
+    .stage{
+      width:100%;
+      aspect-ratio: 1 / 1;
+      max-height:58vh;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(420px 220px at 50% 55%, rgba(220,189,172,.18), transparent 60%);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .greens{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      opacity:.95;
+      pointer-events:none;
+      filter:saturate(0.95);
+    }
+    .greens svg{width:92%; height:auto; opacity:.95}
+
+    .sprite{
+      position:absolute;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      width:200px; height:200px;
+      pointer-events:none;
+    }
+
+    /* Card */
+    .cardBox{
+      width:min(520px, 92vw);
+      background:rgba(255,255,255,.62);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      margin:10px auto 0;
+      box-shadow:var(--shadow);
+      text-align:left;
+    }
+    .cardBox label{
+      display:block;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:11px;
+      color:var(--muted);
+      margin:10px 0 6px;
+    }
+    input, textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--line);
+      padding:10px 12px;
+      background:rgba(255,255,255,.55);
+      color:var(--ink);
+      font:inherit;
+      outline:none;
+    }
+    textarea{min-height:110px; resize:vertical}
+
+    /* Formula */
+    .formulaBox{
+      width:min(580px, 94vw);
+      margin:12px auto 0;
+      border:1px solid rgba(242,174,28,.60);
+      background:rgba(242,174,28,.07);
+      border-radius:24px;
+      padding:18px 18px;
+      text-align:center;
+    }
+    .formulaTitle{
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .formulaName{
+      margin-top:10px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-size:14px;
+      color:var(--ink);
+      font-family:"Lovelo", ui-sans-serif, system-ui;
+    }
+    .formulaMood{margin-top:6px;color:var(--muted);font-size:13px}
+    .pillRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; justify-content:center}
+    .pill{
+      display:inline-flex;align-items:center;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(255,255,255,.55);
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      font-size:12px;
+      color:var(--ink);
+      text-decoration:none;
+    }
+    .pill:hover{border-color:rgba(118,46,0,.35)}
+    .finePrint{margin-top:10px;color:var(--muted);font-size:12px}
+
+    /* Share view */
+    #shareView{display:none}
+    .shareCard{
+      width:min(720px, 94vw);
+      margin:20px auto 40px;
+      padding:22px;
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.62);
+      box-shadow:var(--shadow);
+      text-align:left;
+    }
+    .rule{height:1px;background:rgba(242,174,28,.55); margin:16px 0}
+    .typedMeta{
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:10px;
+      line-height:1.4;
+    }
+    .msg{
+      white-space:pre-wrap;
+      font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
+      font-size:14px;
+      line-height:1.5;
+    }
+  
+    .shareActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      margin-top:10px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- BUILDER -->
+  <div id="builderView" class="wrap">
+    <div class="center">
+      <a href="https://www.kamelyofficiel.com/" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-top:6px">
+        <img src="assets/kamely-logo.png" alt="Kamely"
+             style="height:136px;max-height:16vh;width:auto;display:block"
+             onerror="this.outerHTML='<span style=&quot;font-family:Brusher, Georgia, serif; font-size:34px; color:var(--ink)&quot;>Kamely</span>';" />
+      </a>
+      <h1>Botanical Atelier</h1>
+      
+      <div class="brand" style="margin-top:8px">Digibouquet by Kamely</div>
+
+      <div id="step1">
+        <div class="stepTitle">Step 1 — Pick 3 to 5 blooms</div>
+        <div class="picker" id="picker"></div>
+        <div class="flowerLabelRow" id="pickedRow"></div>
+        <div class="btnRow" style="margin-top:14px">
+          <button class="btn primary" id="toArrangeBtn" disabled>Next</button>
+        </div>
+      </div>
+
+      <div id="step2" style="display:none">
+        <div class="stepTitle">Step 2 — Your bouquet</div>
+        <div class="btnRow">
+          <button class="btn primary" id="shuffleBtn">Try a new arrangement</button>
+          <button class="btn" id="cycleGreenBtn">Change greenery</button>
+        </div>
+
+        <div class="stageWrap">
+          <div class="stage" id="stage">
+            <div class="greens" id="greensLayer"></div>
+          </div>
+        </div>
+
+        <div class="btnRow" style="margin-top:16px">
+          <button class="btn" id="backToPickBtn">Back</button>
+          <button class="btn primary" id="toCardBtn">Next</button>
+        </div>
+      </div>
+
+      <div id="step3" style="display:none">
+        <div class="stepTitle">Step 3 — Write the card</div>
+
+        <div class="cardBox">
+          <label>To</label>
+          <input id="toInput" placeholder="Dear ..." />
+          <label>Message</label>
+          <textarea id="msgInput" placeholder="Write your note..."></textarea>
+          <label>From</label>
+          <input id="fromInput" placeholder="Sincerely, ..." />
+          <label>Song link</label>
+          <input id="songInput" placeholder="Paste Spotify / YouTube / Apple Music link (optional)" />
+        </div>
+
+        <div class="formulaBox" id="formulaBox"></div>
+
+        <div class="btnRow" style="margin-top:16px">
+          <button class="btn" id="backToArrangeBtn">Back</button>
+          <button class="btn primary" id="copyLinkBtn">Copy link</button>
+          <button class="btn" id="openShareBtn">Open card</button>
+        </div>
+
+        <div class="finePrint" id="status"></div>
+      </div>
+    <div class="center" style="margin-top:24px">
+      <div class="brand" style="opacity:.9">Kamely — Madagascar Botanical Apothecary</div>
+    </div>
+  </div>
+
+  <!-- SHARE VIEW -->
+  <div id="shareView" class="wrap">
+    <div class="shareCard">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+        <div>
+          <div class="brand">Digibouquet</div>
+          
+        </div>
+        <div class="typedMeta" id="typedMeta"></div>
+      </div>
+
+      <div class="shareGrid" style="margin-top:14px;display:grid;grid-template-columns: 1.15fr 0.85fr; gap:14px; align-items:start">
+        <!-- Left: bouquet -->
+        <div>
+          <div class="stageWrap" style="width:100%;margin:0">
+            <div class="stage" id="shareStage" style="max-height:none">
+              <div class="greens" id="shareGreensLayer"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: card + music + scent -->
+        <div>
+          <div class="cardBox" style="width:100%;margin:0;padding:16px">
+            <div class="msg" id="shareMsg"></div>
+            <div class="typedMeta" id="shareFrom" style="margin-top:10px"></div>
+          </div>
+
+          <div class="cardBox" style="width:100%;margin:12px 0 0;padding:14px">
+            <div style="font-family: ui-monospace,'Courier Prime','Courier New',monospace; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--muted)">Music for you</div>
+            <div class="typedMeta" id="shareSong" style="margin-top:8px"></div>
+          </div>
+
+          <div style="margin-top:12px" id="shareFormula"></div>
+        </div>
+      </div>
+
+      <div class="finePrint" style="margin-top:14px;text-align:center">
+        Tag us on Instagram:
+        <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
+        • © 2026 Kamely. All rights reserved.. All rights reserved.</div>
+
+      <style>
+        @media (max-width: 860px){
+          .shareGrid{grid-template-columns:1fr !important;}
+        }
+      </style>
+</div>
+
+    <div class="center">
+      
+      <button class="btn primary" id="downloadImgBtn">Download image</button>
+
+      <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
+    </div>
+
+    <div class="center" style="margin-top:10px;color:var(--muted);font-size:12px;font-family:ui-monospace,'Courier Prime','Courier New',monospace;line-height:1.6">
+      © <span id="yearNow"></span> Kamely. <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
+    </div>
+
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+/* =========================
+   Inventory-driven Oils
+========================= */
+const OIL_LINKS = {
+  cinnamon: "https://www.kamelyofficiel.com/essential-oil-1/cinnamon",
+  citriodora: "https://www.kamelyofficiel.com/essential-oil-1/citriodora",
+  clove: "https://www.kamelyofficiel.com/essential-oil-1/cloveclaws",
+  geranium: "https://www.kamelyofficiel.com/essential-oil-1/geranium",
+  ginger: "https://www.kamelyofficiel.com/essential-oil-1/ginger",
+  helychrise: "https://www.kamelyofficiel.com/essential-oil-1/helychrise",
+  niaouli: "https://www.kamelyofficiel.com/essential-oil-1/niaouli",
+  ravintsara: "https://www.kamelyofficiel.com/essential-oil-1/ravintsara",
+  ylang: "https://www.kamelyofficiel.com/essential-oil-1/ylangylang1",
+};
+
+/* =========================
+   Flowers (5 only)
+   Each can be selected once.
+========================= */
+const FLOWERS = [
+  // Put your PNG files in /assets/flowers/ and keep these names (or change paths here)
+  { id:"rose",   name:"Rose Bloom",          img:"assets/flowers/rose.png",   vibe:"romance" },
+  { id:"ylang",  name:"Ylang Star",          img:"assets/flowers/ylang.png",  vibe:"romance" },
+  { id:"euca",   name:"Eucalyptus Whisper",  img:"assets/flowers/euca.png",   vibe:"fresh" },
+  { id:"island", name:"Island Blossom",      img:"assets/flowers/island.png", vibe:"fresh" },
+  { id:"spice",  name:"Spice Petal",         img:"assets/flowers/spice.png",  vibe:"warm" },
+];
+
+/* 3 big greenery backgrounds (single choice) */
+const GREENS_BG = [
+  // Put your PNG files in /assets/greens/
+  { id:"bg1", src:"assets/greens/bg1.png" },
+  { id:"bg2", src:"assets/greens/bg2.png" },
+  { id:"bg3", src:"assets/greens/bg3.png" },
+];
+
+/* =========================
+   State
+========================= */
+const defaultState = () => ({
+  picked: [],          // array of flower ids (unique)
+  greenIndex: 0,       // which background
+  layout: [],          // [{id,x,y,s,r,z}]
+  card: { to:"", from:"", msg:"" },
+  songUrl: ""
+});
+
+let state = defaultState();
+
+/* =========================
+   DOM
+========================= */
+const builderView = document.getElementById("builderView");
+const shareView   = document.getElementById("shareView");
+
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const step3 = document.getElementById("step3");
+
+const picker = document.getElementById("picker");
+const pickedRow = document.getElementById("pickedRow");
+const toArrangeBtn = document.getElementById("toArrangeBtn");
+
+const stage = document.getElementById("stage");
+const greensLayer = document.getElementById("greensLayer");
+
+const shuffleBtn = document.getElementById("shuffleBtn");
+const cycleGreenBtn = document.getElementById("cycleGreenBtn");
+const backToPickBtn = document.getElementById("backToPickBtn");
+const toCardBtn = document.getElementById("toCardBtn");
+
+const toInput = document.getElementById("toInput");
+const msgInput = document.getElementById("msgInput");
+const fromInput = document.getElementById("fromInput");
+const songInput = document.getElementById("songInput");
+
+const formulaBox = document.getElementById("formulaBox");
+const statusEl = document.getElementById("status");
+const copyLinkBtn = document.getElementById("copyLinkBtn");
+const openShareBtn = document.getElementById("openShareBtn");
+const backToArrangeBtn = document.getElementById("backToArrangeBtn");
+
+const shareStage = document.getElementById("shareStage");
+const shareGreensLayer = document.getElementById("shareGreensLayer");
+const shareMsg = document.getElementById("shareMsg");
+const shareFrom = document.getElementById("shareFrom");
+const shareSong = document.getElementById("shareSong");
+const shareFormula = document.getElementById("shareFormula");
+const typedMeta = document.getElementById("typedMeta");
+const makeNewBtn = document.getElementById("makeNewBtn");
+const downloadImgBtn = document.getElementById("downloadImgBtn");
+const downloadImgBuilderBtn = document.getElementById("downloadImgBuilderBtn");
+const shareCardEl = document.querySelector(".shareCard");
+const builderStageEl = document.getElementById("stage");
+
+/* =========================
+   Init
+========================= */
+renderPicker();
+loadFromHashOrInit();
+renderAll();
+// set footer year
+[...document.querySelectorAll('#yearNow')].forEach(n => n.textContent = new Date().getFullYear());
+
+/* =========================
+   Flow / Steps
+========================= */
+toArrangeBtn.addEventListener("click", () => {
+  goStep(2);
+  ensureLayout();
+  renderBouquet(stage, greensLayer, state.layout);
+});
+
+toCardBtn.addEventListener("click", () => {
+  goStep(3);
+  renderFormula();
+});
+
+backToPickBtn.addEventListener("click", () => goStep(1));
+backToArrangeBtn.addEventListener("click", () => goStep(2));
+
+shuffleBtn.addEventListener("click", () => {
+  ensureLayout(true);
+  renderBouquet(stage, greensLayer, state.layout);
+  pushStateToHash();
+});
+
+cycleGreenBtn.addEventListener("click", () => {
+  state.greenIndex = (state.greenIndex + 1) % GREENS_BG.length;
+  renderGreens(greensLayer);
+  pushStateToHash();
+});
+
+[toInput, msgInput, fromInput, songInput].forEach(el => {
+  el.addEventListener("input", debounce(() => {
+    state.card.to = toInput.value;
+    state.card.msg = msgInput.value;
+    state.card.from = fromInput.value;
+    state.songUrl = songInput.value.trim();
+    renderFormula();
+    pushStateToHash();
+  }, 80));
+});
+
+copyLinkBtn.addEventListener("click", async () => {
+  const url = buildShareUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    statusEl.innerHTML = (location.origin==="null") ? "Copied. This link works best after you publish it online." : "Copied. Paste to share.";
+  }catch{
+    statusEl.textContent = "Could not copy automatically. Copy from the address bar after opening the card.";
+  }
+});
+
+openShareBtn.addEventListener("click", () => {
+  window.open(buildShareUrl(), "_blank");
+});
+
+makeNewBtn.addEventListener("click", () => {
+  // clear hash and restart
+  history.replaceState(null, "", location.pathname);
+  state = defaultState();
+  goStep(1);
+  renderAll();
+// set footer year
+[...document.querySelectorAll('#yearNow')].forEach(n => n.textContent = new Date().getFullYear());
+});
+
+/* =========================
+   Picker (unique selection, 3–5)
+========================= */
+function renderPicker(){
+  picker.innerHTML = "";
+  FLOWERS.forEach((f, idx) => {
+    const b = document.createElement("button");
+    b.className = "flowerBtn";
+    b.setAttribute("type","button");
+    b.setAttribute("aria-label", f.name);
+    b.innerHTML = `<img alt="${escapeHtml(f.name)}" src="${f.img}" style="width:220px;height:220px;object-fit:contain;display:block" /><div class="dot">${idx+1}</div>`;
+    b.addEventListener("click", () => togglePick(f.id));
+    picker.appendChild(b);
+  });
+}
+
+function togglePick(id){
+  const has = state.picked.includes(id);
+  if(has){
+    state.picked = state.picked.filter(x => x !== id);
+  } else {
+    if(state.picked.length >= 5) return; // max 5
+    state.picked = [...state.picked, id];
+  }
+
+  // update button states
+  [...picker.children].forEach((btn, i) => {
+    const fid = FLOWERS[i].id;
+    btn.classList.toggle("selected", state.picked.includes(fid));
+  });
+
+  // chips
+  pickedRow.innerHTML = state.picked.map(pid => {
+    const f = FLOWERS.find(x=>x.id===pid);
+    return `<span class="chip">${escapeHtml(f.name)}</span>`;
+  }).join("");
+
+  // next enable
+  toArrangeBtn.disabled = !(state.picked.length >= 3 && state.picked.length <= 5);
+
+  // layout reset when changing picks
+  state.layout = [];
+  pushStateToHash();
+}
+
+/* =========================
+   Greens + Bouquet rendering
+========================= */
+function renderGreens(layerEl){
+  const g = GREENS_BG[state.greenIndex % GREENS_BG.length];
+  layerEl.innerHTML = `<img alt="" src="${g.src}" style="width:92%;height:auto;opacity:.95;pointer-events:none" />`;
+}
+
+function ensureLayout(force=false){
+  if(!force && state.layout.length === state.picked.length) return;
+
+  const W = stage.clientWidth;
+  const H = stage.clientHeight;
+
+  const n = state.picked.length;
+
+  // Harmonic slot patterns for 3–5 flowers (triangle / diamond / pentagon-ish)
+  const patterns = {
+    3: [[0.0,-0.30],[-0.28,0.18],[0.28,0.18]],
+    4: [[0.0,-0.34],[-0.34,0.02],[0.34,0.02],[0.0,0.36]],
+    5: [[0.0,-0.38],[-0.34,-0.06],[0.34,-0.06],[-0.22,0.34],[0.22,0.34]]
+  };
+
+  const slots = (patterns[n] || patterns[5]).slice();
+  slots.sort(() => Math.random() - 0.5);
+
+  const spreadX = Math.min(250, W * 0.32);
+  const spreadY = Math.min(220, H * 0.28);
+
+  const cx = W * 0.52;
+  const cy = H * 0.52;
+
+  const jitter = 14;
+  const baseScale = (n === 5) ? 0.90 : (n === 4 ? 0.96 : 1.02);
+
+  const placed = state.picked.map((id, i) => {
+    const s = slots[i] || [0,0];
+    const x = clamp(cx + s[0]*spreadX + rand(-jitter, jitter), 150, W-150);
+    const y = clamp(cy + s[1]*spreadY + rand(-jitter, jitter), 150, H-140);
+    return { id, x, y, s: rand(baseScale - 0.03, baseScale + 0.04), r: rand(-8, 8), z: 10 + i };
+  });
+
+  placed.sort(() => Math.random() - 0.5).forEach((it, i) => it.z = 10+i);
+  state.layout = placed;
+
+  renderGreens(greensLayer);
+  pushStateToHash();
+}
+
+function renderBouquet(stageEl, greensEl, layout){
+  // Keep the existing greenery layer element; only update its image + re-render sprites
+  if(greensEl){
+    renderGreens(greensEl);
+  }
+
+  // Remove existing sprites (but keep greenery)
+  stageEl.querySelectorAll(".sprite").forEach(n => n.remove());
+
+  const count = state.picked.length;
+  const sizeFactor = (count >= 5) ? 0.82 : (count === 4 ? 0.92 : 1.0);
+
+  layout
+    .slice()
+    .sort((a,b)=>a.z-b.z)
+    .forEach(item => {
+      const f = FLOWERS.find(x => x.id === item.id);
+      if(!f) return;
+      const el = document.createElement("div");
+      el.className = "sprite";
+      el.style.left = item.x + "px";
+      el.style.top = item.y + "px";
+      el.style.zIndex = item.z;
+
+      const finalScale = (item.s || 1) * sizeFactor;
+      el.style.transform = `translate(-50%,-50%) rotate(${item.r}deg) scale(${finalScale})`;
+
+      el.innerHTML = `<img alt="${escapeHtml(f.name)}" src="${f.img}" style="width:200px;height:200px;object-fit:contain;display:block" />`;
+      stageEl.appendChild(el);
+    });
+}
+
+/* =========================
+   Formula (always ends with honey suggestion in share view)
+========================= */
+function computeFormula(){
+  // Determine formula by picks:
+  // If spice flower chosen -> warm
+  // else compare romance vs fresh
+  const picked = state.picked;
+  const hasSpice = picked.includes("spice");
+
+  let romance = 0, fresh = 0;
+  picked.forEach(id => {
+    const f = FLOWERS.find(x=>x.id===id);
+    if(!f) return;
+    if(f.vibe === "romance") romance++;
+    if(f.vibe === "fresh") fresh++;
+  });
+
+  let key = "romance";
+  if(hasSpice) key = "warm";
+  else if(fresh > romance) key = "fresh";
+
+  const formulas = {
+    romance: {
+      title: "Island Romance",
+      mood: "Soft, enveloping, intimate.",
+      oils: [
+        { k:"geranium", label:"Geranium", parts:3 },
+        { k:"ylang", label:"Ylang-Ylang", parts:2 },
+        { k:"ravintsara", label:"Ravintsara", parts:2 },
+      ]
+    },
+    fresh: {
+      title: "Fresh Devotion",
+      mood: "Clean, luminous, tender.",
+      oils: [
+        { k:"citriodora", label:"Citriodora", parts:3 },
+        { k:"helychrise", label:"Helychrise", parts:2 },
+        { k:"ravintsara", label:"Ravintsara", parts:2 },
+      ]
+    },
+    warm: {
+      title: "Warm Affection",
+      mood: "Passionate, comforting, deep.",
+      oils: [
+        { k:"cinnamon", label:"Cinnamon", parts:2 },
+        { k:"clove", label:"Clove", parts:2 },
+        { k:"ginger", label:"Ginger", parts:2 },
+        { k:"geranium", label:"Geranium", parts:1 },
+      ]
+    }
+  };
+
+  return formulas[key];
+}
+
+function renderFormula(){
+  const f = computeFormula();
+  const oilLinksInline = f.oils.map(o => {
+    const url = OIL_LINKS[o.k] || "#";
+    return `<a class="pill" href="${url}" target="_blank" rel="noopener">${escapeHtml(o.label)}</a>`;
+  }).join("");
+
+  const partsLine = f.oils.map(o => `${o.parts} part${o.parts>1?"s":""} ${o.label}`).join(" · ");
+
+  formulaBox.innerHTML = `
+    <div class="formulaTitle">Recreate the scent</div>
+    <div class="formulaName">${escapeHtml(f.title)}</div>
+    <div class="formulaMood">${escapeHtml(f.mood)}</div>
+    <div class="pillRow">${oilLinksInline}</div>
+    <div class="finePrint">${escapeHtml(partsLine)}</div>
+    <div class="finePrint" style="margin-top:8px">Recipes are for diffuser use. For topical use, dilute properly and patch test.</div>
+  `;
+}
+
+/* =========================
+   Share URL (hash)
+========================= */
+function minimalPayload(){
+  return {
+    p: state.picked,
+    gi: state.greenIndex,
+    lay: state.layout.map(x => [x.id, round(x.x), round(x.y), round2(x.s), round2(x.r), x.z]),
+    card: { t: state.card.to, f: state.card.from, m: state.card.msg },
+    song: state.songUrl
+  };
+}
+
+function encodePayload(obj){
+  const json = JSON.stringify(obj);
+  const b64 = btoa(unescape(encodeURIComponent(json)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return b64;
+}
+
+function decodePayload(b64url){
+  const b64 = b64url.replace(/-/g,'+').replace(/_/g,'/');
+  const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
+  const json = decodeURIComponent(escape(atob(b64 + pad)));
+  return JSON.parse(json);
+}
+
+function pushStateToHash(){
+  const encoded = encodePayload(minimalPayload());
+  history.replaceState(null, "", `#b=${encoded}`);
+}
+
+function buildShareUrl(){
+  const encoded = encodePayload(minimalPayload());
+  const base = (location.origin && location.origin !== "null")
+    ? (location.origin + location.pathname)
+    : location.href.split("#")[0];
+  return `${base}#b=${encoded}`;
+}
+
+/* =========================
+   Load: if #b= exists -> show share view
+========================= */
+function loadFromHashOrInit(){
+  const hash = location.hash || "";
+  const match = hash.match(/#b=([A-Za-z0-9\-_]+)/);
+
+  if(!match){
+    // init greenery
+    renderGreens(greensLayer);
+    goStep(1);
+    return;
+  }
+
+  try{
+    const payload = decodePayload(match[1]);
+    state = defaultState();
+    state.picked = Array.isArray(payload.p) ? payload.p.slice(0,5) : [];
+    state.greenIndex = Number.isFinite(payload.gi) ? payload.gi : 0;
+    state.layout = (payload.lay||[]).map(a => ({ id:a[0], x:a[1], y:a[2], s:a[3], r:a[4], z:a[5] }));
+    state.card = { to: payload.card?.t || "", from: payload.card?.f || "", msg: payload.card?.m || "" };
+    state.songUrl = payload.song || "";
+
+    // render share view
+    setShareView();
+  }catch(e){
+    // fallback to builder
+    goStep(1);
+  }
+}
+
+function setShareView(){
+  builderView.style.display = "none";
+  shareView.style.display = "";
+  document.title = "A bouquet for you";
+
+  // typed meta
+  const d = new Date();
+  typedMeta.innerHTML = `Typed on ${d.toLocaleDateString()}<br/>From the Kamely Botanical Atelier`;
+
+  // bouquet
+  renderGreens(shareGreensLayer);
+  renderBouquet(shareStage, shareGreensLayer, state.layout.length ? state.layout : rebuildLayoutForShare());
+
+  // message
+  const toLine = state.card.to ? `To: ${state.card.to}\n\n` : "";
+  shareMsg.textContent = toLine + (state.card.msg || "");
+  shareFrom.textContent = state.card.from ? `— ${state.card.from}` : "";
+
+  // song link
+  if(state.songUrl){
+    shareSong.innerHTML = `Song link → <a href="${escapeHtml(state.songUrl)}" target="_blank" rel="noopener">${escapeHtml(shortenUrl(state.songUrl))}</a>`;
+  } else {
+    shareSong.textContent = "";
+  }
+
+  // formula
+  const f = computeFormula();
+  const pills = f.oils.map(o => `<a class="pill" href="${OIL_LINKS[o.k] || "#"}" target="_blank" rel="noopener">${escapeHtml(o.label)}</a>`).join("");
+  const partsLine = f.oils.map(o => `${o.parts} part${o.parts>1?"s":""} ${o.label}`).join(" · ");
+  shareFormula.innerHTML = `
+    <div class="formulaBox" style="margin:0">
+      <div class="formulaTitle">Recreate the scent</div>
+      <div class="formulaName">${escapeHtml(f.title)}</div>
+      <div class="formulaMood">${escapeHtml(f.mood)}</div>
+      <div class="pillRow">${pills}</div>
+      <div class="finePrint">${escapeHtml(partsLine)}</div>
+    </div>
+  `;
+}
+
+function rebuildLayoutForShare(){
+  const W = shareStage.clientWidth || 520;
+  const H = shareStage.clientHeight || 520;
+
+  const n = state.picked.length;
+
+  const patterns = {
+    3: [[0.0,-0.30],[-0.28,0.18],[0.28,0.18]],
+    4: [[0.0,-0.34],[-0.34,0.02],[0.34,0.02],[0.0,0.36]],
+    5: [[0.0,-0.38],[-0.34,-0.06],[0.34,-0.06],[-0.22,0.34],[0.22,0.34]]
+  };
+
+  const slots = (patterns[n] || patterns[5]).slice();
+  slots.sort(() => Math.random() - 0.5);
+
+  const spreadX = Math.min(250, W * 0.32);
+  const spreadY = Math.min(220, H * 0.28);
+
+  const cx = W * 0.52;
+  const cy = H * 0.52;
+
+  const jitter = 14;
+  const baseScale = (n === 5) ? 0.90 : (n === 4 ? 0.96 : 1.02);
+
+  const placed = state.picked.map((id, i) => {
+    const s = slots[i] || [0,0];
+    const x = clamp(cx + s[0]*spreadX + rand(-jitter, jitter), 150, W-150);
+    const y = clamp(cy + s[1]*spreadY + rand(-jitter, jitter), 150, H-140);
+    return { id, x, y, s: rand(baseScale - 0.03, baseScale + 0.04), r: rand(-8, 8), z: 10 + i };
+  });
+
+  placed.sort(() => Math.random() - 0.5).forEach((it,i)=> it.z=10+i);
+  return placed;
+}
+
+function goStep(n){
+  step1.style.display = (n===1) ? "" : "none";
+  step2.style.display = (n===2) ? "" : "none";
+  step3.style.display = (n===3) ? "" : "none";
+}
+
+function renderAll(){
+  // restore picker selected state if any
+  [...picker.children].forEach((btn, i) => {
+    const fid = FLOWERS[i].id;
+    btn.classList.toggle("selected", state.picked.includes(fid));
+  });
+
+  pickedRow.innerHTML = state.picked.map(pid => {
+    const f = FLOWERS.find(x=>x.id===pid);
+    return `<span class="chip">${escapeHtml(f.name)}</span>`;
+  }).join("");
+
+  toArrangeBtn.disabled = !(state.picked.length >= 3 && state.picked.length <= 5);
+
+  toInput.value = state.card.to || "";
+  msgInput.value = state.card.msg || "";
+  fromInput.value = state.card.from || "";
+  songInput.value = state.songUrl || "";
+
+  renderGreens(greensLayer);
+
+  if(state.picked.length >= 3){
+    renderFormula();
+  } else {
+    formulaBox.innerHTML = `
+      <div class="formulaTitle">Recreate the scent</div>
+      <div class="finePrint">Pick 3–5 blooms to generate a Madagascar formula.</div>
+    `;
+  }
+}
+
+/* =========================
+   SVG helpers
+========================= */
+function flowerSVG(petal, center){
+  return `
+  <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
+    <g>
+      <circle cx="32" cy="18" r="10" fill="${petal}" opacity="0.95"/>
+      <circle cx="18" cy="30" r="10" fill="${petal}" opacity="0.9"/>
+      <circle cx="46" cy="30" r="10" fill="${petal}" opacity="0.9"/>
+      <circle cx="24" cy="46" r="10" fill="${petal}" opacity="0.9"/>
+      <circle cx="40" cy="46" r="10" fill="${petal}" opacity="0.9"/>
+      <circle cx="32" cy="34" r="9" fill="${center}" opacity="0.95"/>
+      <circle cx="32" cy="34" r="4" fill="rgba(255,255,255,.55)"/>
+    </g>
+  </svg>`;
+}
+
+/* Big greenery BGs (single layer) */
+function greensBG1(){
+  return `
+  <svg viewBox="0 0 700 700" aria-hidden="true">
+    <g opacity="0.95">
+      <path d="M84 520c80-210 220-310 420-340-70 160-90 320-40 420-140-10-240-50-380-80z"
+        fill="rgba(108,113,74,.24)"/>
+      <path d="M110 560c60-170 190-260 350-290-55 130-65 260-28 350-110-10-210-28-322-60z"
+        fill="rgba(108,113,74,.16)"/>
+      <path d="M210 590c10-140 90-240 200-320-20 120-10 210 36 300-80 16-150 20-236 20z"
+        fill="rgba(220,189,172,.18)"/>
+    </g>
+  </svg>`;
+}
+function greensBG2(){
+  return `
+  <svg viewBox="0 0 700 700" aria-hidden="true">
+    <g opacity="0.95">
+      <path d="M130 600c80-90 130-240 140-400 80 110 130 260 130 400-90 20-180 20-270 0z"
+        fill="rgba(108,113,74,.22)"/>
+      <path d="M390 610c30-140 90-260 180-360 20 150-10 280-70 380-40 0-70-6-110-20z"
+        fill="rgba(108,113,74,.16)"/>
+      <path d="M120 520c60-50 120-170 120-300 50 80 80 200 70 320-70 10-120 10-190-20z"
+        fill="rgba(220,189,172,.16)"/>
+    </g>
+  </svg>`;
+}
+function greensBG3(){
+  return `
+  <svg viewBox="0 0 700 700" aria-hidden="true">
+    <g opacity="0.95">
+      <path d="M120 420c180-140 340-160 470-120-120 80-220 170-260 280-90-20-150-60-210-160z"
+        fill="rgba(108,113,74,.20)"/>
+      <path d="M150 500c160-90 300-90 420-40-110 60-200 120-250 200-70-40-110-80-170-160z"
+        fill="rgba(108,113,74,.14)"/>
+      <path d="M250 360c70-70 160-130 260-160-70 90-110 190-90 310-80-20-130-60-170-150z"
+        fill="rgba(220,189,172,.18)"/>
+    </g>
+  </svg>`;
+}
+
+/* Helpers */
+function rand(min,max){ return Math.random()*(max-min)+min; }
+function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+function lerp(a,b,t){ return a + (b-a)*t; }
+function round(n){ return Math.round(n); }
+function round2(n){ return Math.round(n*100)/100; }
+
+function debounce(fn, ms){
+  let t=null;
+  return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); };
+}
+
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, (c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+function shortenUrl(u){
+  try{
+    const url = new URL(u);
+    return url.hostname + url.pathname.slice(0, 24) + (url.pathname.length>24 ? "…" : "");
+  }catch{ return u.slice(0, 40) + (u.length>40 ? "…" : ""); }
+}
+</script>
+</body>
+</html>
