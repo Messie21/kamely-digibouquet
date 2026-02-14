@@ -824,20 +824,8 @@ function pushStateToHash(){
 }
 
 function getShareUrl(){
-  // Try to generate #b=... using whatever function exists in this file
-  try{
-    if (typeof pushStateToHash === "function") {
-      pushStateToHash();
-    } else if (typeof pushStateToHash === "function") {
-      pushStateToHash();
-    } else if (typeof buildShareUrl === "function") {
-      // Some versions already have buildShareUrl that returns the full URL
-      return buildShareUrl();
-    } else if (typeof pushState === "function") {
-      pushState();
-    }
-  }catch(e){ /* don't crash */ }
-
+  // ensure the #b=... payload is created/updated
+  pushStateToHash();
   return location.origin + location.pathname + location.search + location.hash;
 }
 
@@ -908,6 +896,12 @@ function loadFromHashOrInit(){
 }
 
 function setShareView(){
+  // safety: if share DOM isn't present, don't crash
+  if(!builderView || !shareView || !typedMeta || !shareGreensLayer || !shareStage || !shareMsg || !shareFrom || !shareSong || !shareFormula){
+    console.error('Share view elements missing');
+    return;
+  }
+
   builderView.style.display = "none";
   shareView.style.display = "";
   document.title = "A bouquet for you";
