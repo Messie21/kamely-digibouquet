@@ -49,6 +49,8 @@
       line-height:1;
     }
 
+    .subTitle{margin:22px 0 14px;font-family: ui-monospace, "Courier Prime", "Courier New", monospace;font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;text-align:center}
+
     .sub{
       margin:0 0 18px;
       font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
@@ -412,7 +414,10 @@
       <button class="btn" id="backToCardBtn">Back</button>
       <button class="btn primary" id="confirmBtn">Confirm</button>
       <button class="btn" id="downloadImgBtn" disabled>Download image</button>
+      <button class="btn primary" id="copyLinkBtn">Copy link</button>
+      <button class="btn" id="shareBtn">Share</button>
     </div>
+    <div class="finePrint" id="status4" style="margin-top:10px;text-align:center"></div>
 
       <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
     </div>
@@ -518,6 +523,9 @@ const shareFormula = document.getElementById("shareFormula");
 const typedMeta = document.getElementById("typedMeta");
 const makeNewBtn = document.getElementById("makeNewBtn");
 const downloadImgBtn = document.getElementById("downloadImgBtn");
+const copyLinkBtn = document.getElementById("copyLinkBtn");
+const shareBtn = document.getElementById("shareBtn");
+const status4El = document.getElementById("status4");
 const downloadImgBuilderBtn = document.getElementById("downloadImgBuilderBtn");
 const shareCardEl = document.querySelector(".shareCard");
 const builderStageEl = document.getElementById("stage");
@@ -578,14 +586,20 @@ toPreviewBtn.addEventListener("click", () => {
   state.card.from = fromInput.value.trim();
   state.songUrl = songInput.value.trim();
 
-  // Ensure bouquet exists
-  ensureLayout(true);
-  renderBouquet(stage, greensLayer, state.layout);
+  // IMPORTANT: Step 2 stage is hidden while on Step 3, so its size can be 0.
+  // Build/refresh layout for the *share* stage after Step 4 is visible.
+  state.layout = []; // force a fresh layout sized to the preview stage
 
-  // Render preview (step 4)
+  // Go to preview
   goStep(4);
-  setShareView();
+
+  // Let layout happen, then render (prevents "blank" preview)
+  requestAnimationFrame(() => {
+    setShareView();
+    pushStateToHash();
+  });
 });
+
 
 
 backToCardBtn.addEventListener("click", () => {
@@ -594,12 +608,13 @@ backToCardBtn.addEventListener("click", () => {
 
 confirmBtn.addEventListener("click", () => {
   downloadImgBtn.disabled = false;
-  statusEl.textContent = "Confirmed. You can download now.";
+  if(status4El) status4El.textContent = "Confirmed. You can download now.";
 });
+
 
 downloadImgBtn.addEventListener("click", async () => {
   try{
-    statusEl.textContent = "Preparing download…";
+    if(status4El) status4El.textContent = "Preparing download…";
     // Render latest preview before capture
     setShareView();
     await new Promise(r => requestAnimationFrame(r));
@@ -608,12 +623,34 @@ downloadImgBtn.addEventListener("click", async () => {
     a.download = "kamely-digibouquet.png";
     a.href = canvas.toDataURL("image/png");
     a.click();
-    statusEl.textContent = "Downloaded.";
+    if(status4El) status4El.textContent = "Downloaded.";
   }catch(e){
     console.error(e);
-    statusEl.textContent = "Could not download. Try another browser (Chrome works best).";
+    if(status4El) status4El.textContent = "Could not download. Try another browser (Chrome works best).";
   }
 });
+copyLinkBtn?.addEventListener("click", async () => {
+  const url = buildShareUrl();
+  const ok = await safeCopy(url);
+  if(status4El) status4El.textContent = ok ? "Link copied." : "Could not copy automatically — select and copy from the address bar.";
+});
+
+shareBtn?.addEventListener("click", async () => {
+  const url = buildShareUrl();
+  try{
+    if(navigator.share){
+      await navigator.share({ title: "Kamely Digibouquet", text: "A bouquet for you", url });
+      if(status4El) status4El.textContent = "Shared.";
+    } else {
+      const ok = await safeCopy(url);
+      if(status4El) status4El.textContent = ok ? "Link copied (share not supported on this device)." : "Share not supported — copy from the address bar.";
+    }
+  }catch(e){
+    // user cancelled share is fine
+    if(status4El && e && e.name !== "AbortError") status4El.textContent = "Could not share. Try copying the link.";
+  }
+});
+
 makeNewBtn.addEventListener("click", () => {
   // clear hash and restart
   history.replaceState(null, "", location.pathname);
@@ -922,7 +959,11 @@ function loadFromHashOrInit(){
     state.songUrl = payload.song || "";
 
     // render share view
-    setShareView();
+    goStep(4);
+
+    requestAnimationFrame(() => {
+      setShareView();
+    });
   }catch(e){
     // fallback to builder
     goStep(1);
@@ -1015,7 +1056,11 @@ function goStep(n){
   step2.style.display = (n===2) ? "" : "none";
   step3.style.display = (n===3) ? "" : "none";
   step4.style.display = (n===4) ? "" : "none";
+  // Only show ONE container at a time
+  if(n===4){ builderView.style.display = "none"; }
+  else { builderView.style.display = ""; }
 }
+
 
 function renderAll(){
   // restore picker selected state if any
