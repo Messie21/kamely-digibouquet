@@ -49,6 +49,8 @@
       line-height:1;
     }
 
+    .subTitle{margin:22px 0 14px;font-family: ui-monospace, "Courier Prime", "Courier New", monospace;font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;text-align:center}
+
     .sub{
       margin:0 0 18px;
       font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
@@ -349,80 +351,85 @@
 
         <div class="finePrint" id="status"></div>
       </div>
-    <div class="center" style="margin-top:24px">
+    
+
+      <div id="step4" style="display:none">
+          <div class="subTitle">STEP 4 — PREVIEW</div>
+          <div class="shareCard">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+              <div>
+                <div class="brand">Digibouquet</div>
+                
+              </div>
+              <div class="typedMeta" id="typedMeta"></div>
+            </div>
+      
+            <div class="shareGrid" style="margin-top:14px;display:grid;grid-template-columns: 1.15fr 0.85fr; gap:14px; align-items:start">
+              <!-- Left: bouquet -->
+              <div>
+                <div class="stageWrap" style="width:100%;margin:0">
+                  <div class="stage" id="shareStage" style="max-height:none">
+                    <div class="greens" id="shareGreensLayer"></div>
+                  </div>
+                </div>
+              </div>
+      
+              <!-- Right: card + music + scent -->
+              <div>
+                <div class="cardBox" style="width:100%;margin:0;padding:16px">
+                  <div class="msg" id="shareMsg"></div>
+                  <div class="typedMeta" id="shareFrom" style="margin-top:10px"></div>
+                </div>
+      
+                <div class="cardBox" style="width:100%;margin:12px 0 0;padding:14px">
+                  <div style="font-family: ui-monospace,'Courier Prime','Courier New',monospace; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--muted)">Music for you</div>
+                  <div class="typedMeta" id="shareSong" style="margin-top:8px"></div>
+                </div>
+      
+                <div style="margin-top:12px" id="shareFormula"></div>
+              </div>
+            </div>
+      
+            <div class="finePrint" style="margin-top:14px;text-align:center">
+              Tag us on Instagram:
+              <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
+              • © 2026 Kamely. All rights reserved.. All rights reserved.</div>
+      
+            <style>
+              @media (max-width: 860px){
+                .shareGrid{grid-template-columns:1fr !important;}
+              }
+            </style>
+      </div>
+      
+          <div class="center">
+            
+            <div class="btnRow" style="justify-content:center;gap:10px">
+            <button class="btn" id="backToCardBtn">Back</button>
+            <button class="btn primary" id="confirmBtn">Confirm</button>
+            <button class="btn" id="downloadImgBtn" disabled>Download image</button>
+            <button class="btn primary" id="copyLinkBtn">Copy link</button>
+            <button class="btn" id="shareBtn">Share</button>
+          </div>
+          <div class="finePrint" id="status4" style="margin-top:10px;text-align:center"></div>
+      
+            <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
+          </div>
+      
+          <div class="center" style="margin-top:10px;color:var(--muted);font-size:12px;font-family:ui-monospace,'Courier Prime','Courier New',monospace;line-height:1.6">
+            © <span id="yearNow"></span> Kamely. <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
+          </div>
+      
+        </div>
+
+<div class="center" style="margin-top:24px">
       <div class="brand" style="opacity:.9">Kamely — Madagascar Botanical Apothecary</div>
       <div class="foot">© 2026 Kamely. All rights reserved.</div>
     </div>
   </div>
   </div><!-- end #builderView -->
 
-  <!-- SHARE VIEW -->
-  <div id="step4" class="wrap">
-    <div class="subTitle">STEP 4 — PREVIEW</div>
-    <div class="shareCard">
-      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
-        <div>
-          <div class="brand">Digibouquet</div>
-          
-        </div>
-        <div class="typedMeta" id="typedMeta"></div>
-      </div>
-
-      <div class="shareGrid" style="margin-top:14px;display:grid;grid-template-columns: 1.15fr 0.85fr; gap:14px; align-items:start">
-        <!-- Left: bouquet -->
-        <div>
-          <div class="stageWrap" style="width:100%;margin:0">
-            <div class="stage" id="shareStage" style="max-height:none">
-              <div class="greens" id="shareGreensLayer"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: card + music + scent -->
-        <div>
-          <div class="cardBox" style="width:100%;margin:0;padding:16px">
-            <div class="msg" id="shareMsg"></div>
-            <div class="typedMeta" id="shareFrom" style="margin-top:10px"></div>
-          </div>
-
-          <div class="cardBox" style="width:100%;margin:12px 0 0;padding:14px">
-            <div style="font-family: ui-monospace,'Courier Prime','Courier New',monospace; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--muted)">Music for you</div>
-            <div class="typedMeta" id="shareSong" style="margin-top:8px"></div>
-          </div>
-
-          <div style="margin-top:12px" id="shareFormula"></div>
-        </div>
-      </div>
-
-      <div class="finePrint" style="margin-top:14px;text-align:center">
-        Tag us on Instagram:
-        <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
-        • © 2026 Kamely. All rights reserved.. All rights reserved.</div>
-
-      <style>
-        @media (max-width: 860px){
-          .shareGrid{grid-template-columns:1fr !important;}
-        }
-      </style>
-</div>
-
-    <div class="center">
-      
-      <div class="btnRow" style="justify-content:center;gap:10px">
-      <button class="btn" id="backToCardBtn">Back</button>
-      <button class="btn primary" id="confirmBtn">Confirm</button>
-      <button class="btn" id="downloadImgBtn" disabled>Download image</button>
-    </div>
-
-      <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
-    </div>
-
-    <div class="center" style="margin-top:10px;color:var(--muted);font-size:12px;font-family:ui-monospace,'Courier Prime','Courier New',monospace;line-height:1.6">
-      © <span id="yearNow"></span> Kamely. <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
-    </div>
-
-  </div>
-
+  
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
@@ -518,6 +525,9 @@ const shareFormula = document.getElementById("shareFormula");
 const typedMeta = document.getElementById("typedMeta");
 const makeNewBtn = document.getElementById("makeNewBtn");
 const downloadImgBtn = document.getElementById("downloadImgBtn");
+const copyLinkBtn = document.getElementById("copyLinkBtn");
+const shareBtn = document.getElementById("shareBtn");
+const status4El = document.getElementById("status4");
 const downloadImgBuilderBtn = document.getElementById("downloadImgBuilderBtn");
 const shareCardEl = document.querySelector(".shareCard");
 const builderStageEl = document.getElementById("stage");
@@ -571,19 +581,20 @@ cycleGreenBtn.addEventListener("click", () => {
   }, 80));
 });
 
-toPreviewBtn.addEventListener("click", () => {
-  // Save card inputs
+toPreviewBtn.addEventListener("click", async () => {
   state.card.to = toInput.value.trim();
   state.card.msg = msgInput.value.trim();
   state.card.from = fromInput.value.trim();
   state.songUrl = songInput.value.trim();
 
-  // Ensure bouquet exists
   ensureLayout(true);
-  renderBouquet(stage, greensLayer, state.layout);
 
-  // Render preview (step 4)
   goStep(4);
+
+  // 🔥 CRITICAL: wait for Step 4 to actually layout
+  await new Promise(r => requestAnimationFrame(r));
+  await new Promise(r => requestAnimationFrame(r));
+
   setShareView();
 });
 
@@ -594,12 +605,13 @@ backToCardBtn.addEventListener("click", () => {
 
 confirmBtn.addEventListener("click", () => {
   downloadImgBtn.disabled = false;
-  statusEl.textContent = "Confirmed. You can download now.";
+  if(status4El) status4El.textContent = "Confirmed. You can download now.";
 });
+
 
 downloadImgBtn.addEventListener("click", async () => {
   try{
-    statusEl.textContent = "Preparing download…";
+    if(status4El) status4El.textContent = "Preparing download…";
     // Render latest preview before capture
     setShareView();
     await new Promise(r => requestAnimationFrame(r));
@@ -608,12 +620,34 @@ downloadImgBtn.addEventListener("click", async () => {
     a.download = "kamely-digibouquet.png";
     a.href = canvas.toDataURL("image/png");
     a.click();
-    statusEl.textContent = "Downloaded.";
+    if(status4El) status4El.textContent = "Downloaded.";
   }catch(e){
     console.error(e);
-    statusEl.textContent = "Could not download. Try another browser (Chrome works best).";
+    if(status4El) status4El.textContent = "Could not download. Try another browser (Chrome works best).";
   }
 });
+copyLinkBtn?.addEventListener("click", async () => {
+  const url = buildShareUrl();
+  const ok = await safeCopy(url);
+  if(status4El) status4El.textContent = ok ? "Link copied." : "Could not copy automatically — select and copy from the address bar.";
+});
+
+shareBtn?.addEventListener("click", async () => {
+  const url = buildShareUrl();
+  try{
+    if(navigator.share){
+      await navigator.share({ title: "Kamely Digibouquet", text: "A bouquet for you", url });
+      if(status4El) status4El.textContent = "Shared.";
+    } else {
+      const ok = await safeCopy(url);
+      if(status4El) status4El.textContent = ok ? "Link copied (share not supported on this device)." : "Share not supported — copy from the address bar.";
+    }
+  }catch(e){
+    // user cancelled share is fine
+    if(status4El && e && e.name !== "AbortError") status4El.textContent = "Could not share. Try copying the link.";
+  }
+});
+
 makeNewBtn.addEventListener("click", () => {
   // clear hash and restart
   history.replaceState(null, "", location.pathname);
@@ -922,7 +956,11 @@ function loadFromHashOrInit(){
     state.songUrl = payload.song || "";
 
     // render share view
-    setShareView();
+    goStep(4);
+
+    requestAnimationFrame(() => {
+      setShareView();
+    });
   }catch(e){
     // fallback to builder
     goStep(1);
@@ -1015,7 +1053,11 @@ function goStep(n){
   step2.style.display = (n===2) ? "" : "none";
   step3.style.display = (n===3) ? "" : "none";
   step4.style.display = (n===4) ? "" : "none";
+  // Only show ONE container at a time
+  if(n===4){ builderView.style.display = "none"; }
+  else { builderView.style.display = ""; }
 }
+
 
 function renderAll(){
   // restore picker selected state if any
