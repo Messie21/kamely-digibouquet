@@ -49,8 +49,6 @@
       line-height:1;
     }
 
-    .subTitle{margin:22px 0 14px;font-family: ui-monospace, "Courier Prime", "Courier New", monospace;font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;text-align:center}
-
     .sub{
       margin:0 0 18px;
       font-family: ui-monospace, "Courier Prime", "Courier New", monospace;
@@ -248,11 +246,10 @@
     .finePrint{margin-top:10px;color:var(--muted);font-size:12px}
 
     /* Share view */
-    #step4{display:none}
     .shareCard{
-      width:min(720px, 94vw);
+      width:min(920px, 96vw);
       margin:20px auto 40px;
-      padding:22px;
+      padding:28px;
       border-radius:26px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.62);
@@ -282,6 +279,23 @@
       align-items:center;
       margin-top:10px;
     }
+
+    .foot{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+/* Step 4 containment fixes */
+#shareFormula { min-width: 0; }
+#shareFormula .formulaBox{
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+#shareFormula .formulaBox{ min-height: 100%; }
 
   </style>
 </head>
@@ -351,85 +365,132 @@
 
         <div class="finePrint" id="status"></div>
       </div>
-    
-
-      <div id="step4" style="display:none">
-          <div class="subTitle">STEP 4 — PREVIEW</div>
-          <div class="shareCard">
-            <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
-              <div>
-                <div class="brand">Digibouquet</div>
-                
-              </div>
-              <div class="typedMeta" id="typedMeta"></div>
-            </div>
-      
-            <div class="shareGrid" style="margin-top:14px;display:grid;grid-template-columns: 1.15fr 0.85fr; gap:14px; align-items:start">
-              <!-- Left: bouquet -->
-              <div>
-                <div class="stageWrap" style="width:100%;margin:0">
-                  <div class="stage" id="shareStage" style="max-height:none">
-                    <div class="greens" id="shareGreensLayer"></div>
-                  </div>
-                </div>
-              </div>
-      
-              <!-- Right: card + music + scent -->
-              <div>
-                <div class="cardBox" style="width:100%;margin:0;padding:16px">
-                  <div class="msg" id="shareMsg"></div>
-                  <div class="typedMeta" id="shareFrom" style="margin-top:10px"></div>
-                </div>
-      
-                <div class="cardBox" style="width:100%;margin:12px 0 0;padding:14px">
-                  <div style="font-family: ui-monospace,'Courier Prime','Courier New',monospace; letter-spacing:.14em; text-transform:uppercase; font-size:11px; color:var(--muted)">Music for you</div>
-                  <div class="typedMeta" id="shareSong" style="margin-top:8px"></div>
-                </div>
-      
-                <div style="margin-top:12px" id="shareFormula"></div>
-              </div>
-            </div>
-      
-            <div class="finePrint" style="margin-top:14px;text-align:center">
-              Tag us on Instagram:
-              <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
-              • © 2026 Kamely. All rights reserved.. All rights reserved.</div>
-      
-            <style>
-              @media (max-width: 860px){
-                .shareGrid{grid-template-columns:1fr !important;}
-              }
-            </style>
-      </div>
-      
-          <div class="center">
-            
-            <div class="btnRow" style="justify-content:center;gap:10px">
-            <button class="btn" id="backToCardBtn">Back</button>
-            <button class="btn primary" id="confirmBtn">Confirm</button>
-            <button class="btn" id="downloadImgBtn" disabled>Download image</button>
-            <button class="btn primary" id="copyLinkBtn">Copy link</button>
-            <button class="btn" id="shareBtn">Share</button>
-          </div>
-          <div class="finePrint" id="status4" style="margin-top:10px;text-align:center"></div>
-      
-            <button class="btn linkBtn" id="makeNewBtn">make a bouquet now!</button>
-          </div>
-      
-          <div class="center" style="margin-top:10px;color:var(--muted);font-size:12px;font-family:ui-monospace,'Courier Prime','Courier New',monospace;line-height:1.6">
-            © <span id="yearNow"></span> Kamely. <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener">@kamelyofficiel</a>
-          </div>
-      
-        </div>
-
-<div class="center" style="margin-top:24px">
+    <div class="center" style="margin-top:24px">
       <div class="brand" style="opacity:.9">Kamely — Madagascar Botanical Apothecary</div>
       <div class="foot">© 2026 Kamely. All rights reserved.</div>
     </div>
   </div>
   </div><!-- end #builderView -->
 
-  
+  <!-- SHARE VIEW -->
+  <div id="step4" class="wrap">
+    <div class="center">
+      <a href="https://www.kamelyofficiel.com/" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-top:6px">
+        <img src="assets/kamely-logo.png" alt="Kamely"
+             style="height:136px;max-height:16vh;width:auto;display:block"
+             onerror="this.outerHTML='<span style=&quot;font-family:Brusher, Georgia, serif; font-size:34px; color:var(--ink)&quot;>Kamely</span>';" />
+      </a>
+      <h1>Botanical Atelier</h1>
+      
+      <div class="brand" style="margin-top:8px">Digibouquet by Kamely</div>
+      
+      <div id="step4Headline" class="stepTitle">Step 4 — Preview your bouquet</div>
+
+    <!-- shareCard: clean layout, bouquet same size as step 2 -->
+    <div class="shareCard" id="shareCard" style="
+      width: min(600px, 96vw);
+      margin: 20px auto;
+      padding: 12px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.62);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    ">
+      <!-- TOP: bouquet wrapper with overflow:visible so greenery can bleed -->
+      <div id="shareBouquetWrap" style="
+        width: min(580px, 94vw);
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+        position: relative;
+        overflow: visible;
+        border-radius: 24px;
+        border: none;
+        background: radial-gradient(420px 220px at 50% 55%, rgba(220,189,172,.18), transparent 60%);
+      ">
+        <div id="shareStage" style="position:absolute;inset:0;">
+          <div class="greens" id="shareGreensLayer"></div>
+        </div>
+      </div>
+
+      <!-- MIDDLE: card + recipe -->
+      <div id="shareCardRow" style="
+        width: min(576px, calc(94vw - 0px));
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        align-items: stretch;
+        ">
+        <!-- Card -->
+        <div style="
+          background: rgba(255,255,255,.70);
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          padding: 10px;
+          box-shadow: var(--shadow);
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          overflow: hidden;
+          ">
+          <div style="flex:1;overflow-y:auto;min-height:0;">
+            <div id="shareMsg" style="font-size:11px;line-height:1.45;white-space:pre-wrap;font-family:ui-monospace,'Courier Prime','Courier New',monospace;color:var(--ink);text-align:left;"></div>
+            <div id="shareFrom" style="font-size:10px;color:var(--muted);margin-top:4px;font-family:ui-monospace,'Courier Prime','Courier New',monospace;"></div>
+            <button id="shareSongBtn" class="btn" style="font-size:9px;padding:4px 8px;display:none;margin-top:4px;">💌 Song</button>
+          </div>
+          <div id="typedMeta" style="font-size:9px;color:var(--muted);font-family:ui-monospace,'Courier Prime','Courier New',monospace;line-height:1.3;padding-top:6px;border-top:1px solid var(--line);margin-top:6px;flex-shrink:0;"></div>
+        </div>
+
+        <!-- Recipe -->
+        <div style="
+          display:flex;
+          align-items:stretch;
+          height: 100%;
+          min-width: 0;
+          overflow: hidden;
+        ">
+          <div id="shareFormula" style="width:100%;min-width:0;display:flex;"></div>
+        </div>
+      </div>
+
+      <!-- Footer divider + row — same 12px gap above as everywhere else -->
+      <div style="
+        width: min(576px, calc(94vw - 0px));
+        margin: 0 auto;
+        padding: 12px 0 0;
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      ">
+        <a href="https://www.instagram.com/kamelyofficiel/" target="_blank" rel="noopener" style="font-size:9px;color:var(--muted);text-decoration:none;">@kamelyofficiel</a>
+        <span style="font-size:9px;color:var(--muted);">© 2026 Kamely</span>
+        <button class="btn linkBtn" id="makeNewBtn" style="padding:3px 6px;font-size:9px;">Create yours →</button>
+      </div>
+    </div>
+
+    <!-- Buttons OUTSIDE the card -->
+    <div id="step4Actions" class="center" style="margin-top:24px">
+      <div class="btnRow" style="justify-content:center;gap:10px">
+        <button class="btn" id="backToCardBtn">Back</button>
+        <button class="btn primary" id="shareLinkBtn" disabled>📋 Copy share link</button>
+        <button class="btn primary" id="confirmBtn">Confirm</button>
+      </div>
+      <div id="step4Status" style="margin-top:10px;font-size:12px;color:var(--muted);font-family:ui-monospace,'Courier Prime','Courier New',monospace;letter-spacing:.06em;min-height:18px;"></div>
+    </div>
+
+    <div class="center" style="margin-top:24px">
+      <div class="brand" style="opacity:.9">Kamely — Madagascar Botanical Apothecary</div>
+      <div class="foot">© 2026 Kamely. All rights reserved.</div>
+    </div>
+  </div>
+  </div><!-- end #step4 -->
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
@@ -514,23 +575,24 @@ const statusEl = document.getElementById("status");
 const toPreviewBtn = document.getElementById("toPreviewBtn");
 const backToCardBtn = document.getElementById("backToCardBtn");
 const confirmBtn = document.getElementById("confirmBtn");
+const shareLinkBtn = document.getElementById("shareLinkBtn");
 const backToArrangeBtn = document.getElementById("backToArrangeBtn");
 
 const shareStage = document.getElementById("shareStage");
 const shareGreensLayer = document.getElementById("shareGreensLayer");
 const shareMsg = document.getElementById("shareMsg");
 const shareFrom = document.getElementById("shareFrom");
-const shareSong = document.getElementById("shareSong");
+const shareSongBtn = document.getElementById("shareSongBtn");
 const shareFormula = document.getElementById("shareFormula");
 const typedMeta = document.getElementById("typedMeta");
 const makeNewBtn = document.getElementById("makeNewBtn");
-const downloadImgBtn = document.getElementById("downloadImgBtn");
-const copyLinkBtn = document.getElementById("copyLinkBtn");
-const shareBtn = document.getElementById("shareBtn");
-const status4El = document.getElementById("status4");
-const downloadImgBuilderBtn = document.getElementById("downloadImgBuilderBtn");
 const shareCardEl = document.querySelector(".shareCard");
 const builderStageEl = document.getElementById("stage");
+const step4ActionsEl = document.getElementById("step4Actions");
+const step4StatusEl = document.getElementById("step4Status");
+const step4HeadlineEl = document.getElementById("step4Headline");
+const shareBouquetWrap = document.getElementById("shareBouquetWrap");
+const shareCardRow = document.getElementById("shareCardRow");
 
 /* =========================
    Init
@@ -581,20 +643,29 @@ cycleGreenBtn.addEventListener("click", () => {
   }, 80));
 });
 
-toPreviewBtn.addEventListener("click", async () => {
+toPreviewBtn.addEventListener("click", () => {
+  // Save card inputs
   state.card.to = toInput.value.trim();
   state.card.msg = msgInput.value.trim();
   state.card.from = fromInput.value.trim();
   state.songUrl = songInput.value.trim();
 
-  ensureLayout(true);
+  // Ensure bouquet exists but don't re-randomize
+  ensureLayout(false);
+  renderBouquet(stage, greensLayer, state.layout);
 
+  // Reset step4 gating every time we enter
+  shareLinkBtn.disabled = true;
+  confirmBtn.disabled = false;
+  step4StatusEl.textContent = "";
+  if(step4HeadlineEl){
+    step4HeadlineEl.style.display = "";
+    step4HeadlineEl.textContent = "Step 4 — Preview your bouquet";
+  }
+  if(step4ActionsEl) step4ActionsEl.style.display = "";
+
+  // Render preview (step 4)
   goStep(4);
-
-  // 🔥 CRITICAL: wait for Step 4 to actually layout
-  await new Promise(r => requestAnimationFrame(r));
-  await new Promise(r => requestAnimationFrame(r));
-
   setShareView();
 });
 
@@ -604,47 +675,19 @@ backToCardBtn.addEventListener("click", () => {
 });
 
 confirmBtn.addEventListener("click", () => {
-  downloadImgBtn.disabled = false;
-  if(status4El) status4El.textContent = "Confirmed. You can download now.";
+  shareLinkBtn.disabled = false;
+  confirmBtn.disabled = true;
+  step4StatusEl.textContent = "Confirmed. You can now copy the share link.";
 });
 
-
-downloadImgBtn.addEventListener("click", async () => {
-  try{
-    if(status4El) status4El.textContent = "Preparing download…";
-    // Render latest preview before capture
-    setShareView();
-    await new Promise(r => requestAnimationFrame(r));
-    const canvas = await html2canvas(shareCardEl, { backgroundColor: null, scale: 2, useCORS: true });
-    const a = document.createElement("a");
-    a.download = "kamely-digibouquet.png";
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-    if(status4El) status4El.textContent = "Downloaded.";
-  }catch(e){
-    console.error(e);
-    if(status4El) status4El.textContent = "Could not download. Try another browser (Chrome works best).";
-  }
-});
-copyLinkBtn?.addEventListener("click", async () => {
-  const url = buildShareUrl();
-  const ok = await safeCopy(url);
-  if(status4El) status4El.textContent = ok ? "Link copied." : "Could not copy automatically — select and copy from the address bar.";
-});
-
-shareBtn?.addEventListener("click", async () => {
-  const url = buildShareUrl();
-  try{
-    if(navigator.share){
-      await navigator.share({ title: "Kamely Digibouquet", text: "A bouquet for you", url });
-      if(status4El) status4El.textContent = "Shared.";
-    } else {
-      const ok = await safeCopy(url);
-      if(status4El) status4El.textContent = ok ? "Link copied (share not supported on this device)." : "Share not supported — copy from the address bar.";
-    }
-  }catch(e){
-    // user cancelled share is fine
-    if(status4El && e && e.name !== "AbortError") status4El.textContent = "Could not share. Try copying the link.";
+shareLinkBtn.addEventListener("click", async () => {
+  const shareUrl = buildShareUrl();
+  const copied = await safeCopy(shareUrl);
+  if(copied){
+    shareLinkBtn.textContent = "✓ Link copied!";
+    setTimeout(() => { shareLinkBtn.textContent = "📋 Copy share link"; }, 3000);
+  } else {
+    alert("Copy this link to share:\n\n" + shareUrl);
   }
 });
 
@@ -929,7 +972,7 @@ function buildShareUrl(){
   const base = (location.origin && location.origin !== "null")
     ? (location.origin + location.pathname)
     : location.href.split("#")[0];
-  return `${base}#b=${encoded}`;
+  return `${base}#b=${encoded}&share=1`;
 }
 
 /* =========================
@@ -937,17 +980,17 @@ function buildShareUrl(){
 ========================= */
 function loadFromHashOrInit(){
   const hash = location.hash || "";
-  const match = hash.match(/#b=([A-Za-z0-9\-_]+)/);
+  const bMatch = hash.match(/[#&]b=([A-Za-z0-9\-_]+)/);
+  const isShareLink = /[#&]share=1/.test(hash);
 
-  if(!match){
-    // init greenery
+  if(!bMatch){
     renderGreens(greensLayer);
     goStep(1);
     return;
   }
 
   try{
-    const payload = decodePayload(match[1]);
+    const payload = decodePayload(bMatch[1]);
     state = defaultState();
     state.picked = Array.isArray(payload.p) ? payload.p.slice(0,5) : [];
     state.greenIndex = Number.isFinite(payload.gi) ? payload.gi : 0;
@@ -955,62 +998,115 @@ function loadFromHashOrInit(){
     state.card = { to: payload.card?.t || "", from: payload.card?.f || "", msg: payload.card?.m || "" };
     state.songUrl = payload.song || "";
 
-    // render share view
     goStep(4);
+    setShareView();
 
-    requestAnimationFrame(() => {
-      setShareView();
-    });
+    if(isShareLink){
+      applyShareMode();
+    }
   }catch(e){
-    // fallback to builder
     goStep(1);
   }
 }
 
+/* Hide builder UI and show customer-facing headline when link has &share=1 */
+function applyShareMode(){
+  document.title = "A freshly made bouquet arrived just for you 🌸";
+
+  // Replace step label with customer headline
+  if(step4HeadlineEl){
+    step4HeadlineEl.style.fontFamily = "'Brusher','Georgia',serif";
+    step4HeadlineEl.style.fontSize = "clamp(20px, 4vw, 28px)";
+    step4HeadlineEl.style.letterSpacing = ".02em";
+    step4HeadlineEl.style.textTransform = "none";
+    step4HeadlineEl.style.color = "var(--ink)";
+    step4HeadlineEl.style.fontWeight = "700";
+    step4HeadlineEl.style.marginBottom = "4px";
+    step4HeadlineEl.textContent = "A freshly made bouquet arrived just for you";
+  }
+
+  // Hide all builder action buttons
+  if(step4ActionsEl) step4ActionsEl.style.display = "none";
+}
+
 function setShareView(){
   // safety: if share DOM isn't present, don't crash
-  if(!builderView || !step4 || !typedMeta || !shareGreensLayer || !shareStage || !shareMsg || !shareFrom || !shareSong || !shareFormula){
+  if(!builderView || !step4 || !typedMeta || !shareGreensLayer || !shareStage || !shareMsg || !shareFrom || !shareSongBtn || !shareFormula){
     console.error('Share view elements missing');
     return;
   }
 
-  // builderView stays visible; step switching handled by goStep()
-  step4.style.display = "";
+  // Render preview; goStep(4) already handles visibility
   document.title = "A bouquet for you";
 
   // typed meta
   const d = new Date();
   typedMeta.innerHTML = `Typed on ${d.toLocaleDateString()}<br/>From the Kamely Botanical Atelier`;
 
-  // bouquet
+  // bouquet - same size as step 2, use layout directly
   renderGreens(shareGreensLayer);
-  renderBouquet(shareStage, shareGreensLayer, state.layout.length ? state.layout : rebuildLayoutForShare());
+  renderBouquet(shareStage, null, state.layout);
 
   // message
   const toLine = state.card.to ? `To: ${state.card.to}\n\n` : "";
   shareMsg.textContent = toLine + (state.card.msg || "");
   shareFrom.textContent = state.card.from ? `— ${state.card.from}` : "";
 
-  // song link
+  // song button (inside card)
   if(state.songUrl){
-    shareSong.innerHTML = `Song link → <a href="${escapeHtml(state.songUrl)}" target="_blank" rel="noopener">${escapeHtml(shortenUrl(state.songUrl))}</a>`;
+    shareSongBtn.style.display = "inline-block";
+    shareSongBtn.onclick = () => window.open(state.songUrl, "_blank");
   } else {
-    shareSong.textContent = "";
+    shareSongBtn.style.display = "none";
   }
 
-  // formula
+  // formula (cuter version)
   const f = computeFormula();
-  const pills = f.oils.map(o => `<a class="pill" href="${OIL_LINKS[o.k] || "#"}" target="_blank" rel="noopener">${escapeHtml(o.label)}</a>`).join("");
+  const pills = f.oils.map(o => `<a class="pill" href="${OIL_LINKS[o.k] || "#"}" target="_blank" rel="noopener" style="text-decoration:none;">🌿 ${escapeHtml(o.label)}</a>`).join("");
   const partsLine = f.oils.map(o => `${o.parts} part${o.parts>1?"s":""} ${o.label}`).join(" · ");
   shareFormula.innerHTML = `
-    <div class="formulaBox" style="margin:0">
-      <div class="formulaTitle">Recreate the scent</div>
-      <div class="formulaName">${escapeHtml(f.title)}</div>
-      <div class="formulaMood">${escapeHtml(f.mood)}</div>
-      <div class="pillRow">${pills}</div>
-      <div class="finePrint">${escapeHtml(partsLine)}</div>
+    <div class="formulaBox" style="margin:0;border-radius:14px;padding:12px;height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+      <div class="formulaTitle" style="font-size:9px;">✨ Recreate the scent</div>
+      <div class="formulaName" style="font-size:12px;margin-top:6px;">${escapeHtml(f.title)}</div>
+      <div class="formulaMood" style="font-style:italic;font-size:10px;margin-top:4px;">"${escapeHtml(f.mood)}"</div>
+      <div class="pillRow" style="margin-top:8px;gap:4px;">${pills}</div>
+      <div class="finePrint" style="margin-top:6px;font-size:9px;">${escapeHtml(partsLine)}</div>
+      <a href="https://www.kamelyofficiel.com/essential-oil-1" target="_blank" rel="noopener" 
+         style="display:inline-block;margin-top:8px;padding:6px 12px;background:var(--gold);color:var(--ink);text-decoration:none;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(118,46,0,.2);">Shop Oils →</a>
     </div>
   `;
+
+  // After render settles, push card row down if bouquet content overflows
+  requestAnimationFrame(() => requestAnimationFrame(() => adjustShareCardRow()));
+}
+
+/* Dynamically push shareCardRow down so bouquet/greenery never overlaps it */
+function adjustShareCardRow(){
+  if(!shareBouquetWrap || !shareCardRow) return;
+
+  // Reset to base margin first so we measure from scratch
+  shareCardRow.style.marginTop = "12px";
+
+  // Force a reflow so getBoundingClientRect is fresh
+  void shareCardRow.offsetHeight;
+
+  const wrapRect = shareBouquetWrap.getBoundingClientRect();
+  const rowRect  = shareCardRow.getBoundingClientRect();
+
+  // Find the actual bottom of all content inside the bouquet wrap
+  // (sprites + greens images can overflow the wrapper due to overflow:visible)
+  let contentBottom = wrapRect.bottom;
+  shareBouquetWrap.querySelectorAll(".sprite, .greens, .greens img").forEach(el => {
+    const r = el.getBoundingClientRect();
+    if(r.bottom > contentBottom) contentBottom = r.bottom;
+  });
+
+  const overlap = contentBottom - rowRect.top;
+  if(overlap > 0){
+    // Add extra 16px breathing room
+    const extra = Math.ceil(overlap) + 16;
+    shareCardRow.style.marginTop = (12 + extra) + "px";
+  }
 }
 
 function rebuildLayoutForShare(){
@@ -1035,6 +1131,7 @@ function rebuildLayoutForShare(){
   const cy = H * 0.52;
 
   const jitter = 14;
+  // Use same scale as step 2 (not 3x bigger)
   const baseScale = (n === 5) ? 0.90 : (n === 4 ? 0.96 : 1.02);
 
   const placed = state.picked.map((id, i) => {
@@ -1049,15 +1146,19 @@ function rebuildLayoutForShare(){
 }
 
 function goStep(n){
-  step1.style.display = (n===1) ? "" : "none";
-  step2.style.display = (n===2) ? "" : "none";
-  step3.style.display = (n===3) ? "" : "none";
-  step4.style.display = (n===4) ? "" : "none";
-  // Only show ONE container at a time
-  if(n===4){ builderView.style.display = "none"; }
-  else { builderView.style.display = ""; }
+  if(n === 4){
+    // Step 4 is outside builderView, so hide builder and show step4
+    builderView.style.display = "none";
+    step4.style.display = "block";
+  } else {
+    // Steps 1-3 are inside builderView
+    builderView.style.display = "flex";
+    step4.style.display = "none";
+    step1.style.display = (n===1) ? "block" : "none";
+    step2.style.display = (n===2) ? "block" : "none";
+    step3.style.display = (n===3) ? "block" : "none";
+  }
 }
-
 
 function renderAll(){
   // restore picker selected state if any
